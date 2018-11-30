@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+class MessageAsTranslate {
+    let isFromRussiaToEnglish: Bool
+    let text: String
+    var translatedText: String?
+    init () {
+        self.isFromRussiaToEnglish = true
+        self.text = ""
+        self.translatedText = ""
+    }
+}

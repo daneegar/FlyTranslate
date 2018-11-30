@@ -14,6 +14,7 @@
 		9293FB2021B03E4B005421EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9293FB1E21B03E4B005421EC /* LaunchScreen.storyboard */; };
 		9293FB2821B03E76005421EC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293FB2721B03E76005421EC /* Model.swift */; };
 		9293FB2A21B03EBC005421EC /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293FB2921B03EBC005421EC /* Presenter.swift */; };
+		9293FB2D21B16AD8005421EC /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293FB2C21B16AD8005421EC /* Protocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		9293FB2721B03E76005421EC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		9293FB2921B03EBC005421EC /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
 		9293FB2B21B040EB005421EC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		9293FB2C21B16AD8005421EC /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				9293FB1721B03E47005421EC /* View.swift */,
 				9293FB2721B03E76005421EC /* Model.swift */,
 				9293FB2921B03EBC005421EC /* Presenter.swift */,
+				9293FB2C21B16AD8005421EC /* Protocols.swift */,
 				9293FB1921B03E47005421EC /* Main.storyboard */,
 				9293FB2B21B040EB005421EC /* README.md */,
 				9293FB1C21B03E4B005421EC /* Assets.xcassets */,
@@ -143,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9293FB2D21B16AD8005421EC /* Protocols.swift in Sources */,
 				9293FB2821B03E76005421EC /* Model.swift in Sources */,
 				9293FB1821B03E47005421EC /* View.swift in Sources */,
 				9293FB2A21B03EBC005421EC /* Presenter.swift in Sources */,

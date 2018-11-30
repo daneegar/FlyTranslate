@@ -7,3 +7,17 @@
 //
 
 import Foundation
+
+
+class Presenter: PresenterProtocol {
+    
+    required init(view: ViewProtocol) {
+        
+    }
+    
+    func showGreeting() {
+        
+    }
+    
+    
+}
