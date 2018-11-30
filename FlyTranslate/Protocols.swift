@@ -12,6 +12,5 @@ protocol ViewProtocol: class {
 
 
 protocol PresenterProtocol {
-    init(view: ViewProtocol)
-    func showGreeting()
+    
 }

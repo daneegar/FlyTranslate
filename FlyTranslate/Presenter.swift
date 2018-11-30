@@ -10,14 +10,12 @@ import Foundation
 
 
 class Presenter: PresenterProtocol {
-    
-    required init(view: ViewProtocol) {
-        
-    }
-    
     func showGreeting() {
-        
+        <#code#>
     }
     
+    
+    static let instance: Presenter = Presenter()
+    private init(){}
     
 }
