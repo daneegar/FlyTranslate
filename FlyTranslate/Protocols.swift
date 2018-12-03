@@ -7,7 +7,7 @@
 //
 
 protocol ViewProtocol: class {
-    func setGreeting(greeting: String)
+    func pickTranslated (message: MessageAsSomeTranslate)
 }
 
 

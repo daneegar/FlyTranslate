@@ -8,16 +8,30 @@
 
 import UIKit
 
-class View: UIViewController {
+class View: UIViewController, ViewProtocol {
 
     
+    func setGreeting(greeting: String) {
+        
+    }
+    
+    
+    let presenter = Presenter.instance.self
+    
+    
     override func viewDidLoad() {
+        presenter.view = self
         super.viewDidLoad()
         let ApiEntity = translateWithYandex()
-        ApiEntity.translate(it: nil, inDirection: nil)
+        self.presenter.translate(text: "Hello World", isFromEngToRus: true)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
 
+    
+    
+    func pickTranslated(message: MessageAsSomeTranslate) {
+        print(message.translatedText!)
+    }
 }
 

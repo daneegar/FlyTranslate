@@ -8,13 +8,16 @@
 
 import Foundation
 
-class MessageAsTranslate {
-    let isFromRussiaToEnglish: Bool
+class MessageAsSomeTranslate {
+    let isFromEngToRus: Bool
     let text: String
     var translatedText: String?
-    init () {
-        self.isFromRussiaToEnglish = true
-        self.text = ""
+    init (text: String, isFromEngToRus: Bool) {
+        self.isFromEngToRus = isFromEngToRus
+        self.text = text
         self.translatedText = ""
+    }
+    func compliteTheMessage(withAnswer answer: Answer) {
+        self.translatedText = answer.text[0]
     }
 }

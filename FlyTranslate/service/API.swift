@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 struct Answer: Codable {
     let code: Int
     let lang: String
@@ -24,6 +25,7 @@ struct Answer: Codable {
         self.text = try valueContainer.decode(Array<String>.self, forKey: CodingKeys.text)
     }
 }
+
 class translateWithYandex {
     let stringURL: String
     let url: URL
@@ -31,21 +33,23 @@ class translateWithYandex {
         self.stringURL = "https://translate.yandex.net/api/v1.5/tr.json/translate"
         self.url = URL(string: self.stringURL)!
     }
-    func translate (it text: String?, inDirection fromEnToRu: Bool?){
+    func translate (it text: String?, inDirection fromEnToRu: Bool?, completion: ((Answer?, URLResponse?, Error?) -> Void)?){
         var resultURL = self.url.append("key", value: APIKey.instance.key)
         resultURL = resultURL.append("lang", value: "en-ru")
         resultURL = resultURL.append("text", value: "Hello World!")
         let task = URLSession.shared.dataTask(with: resultURL) { (data, urlResponse, error) in
             let jsonDecoder = JSONDecoder()
-            if let catchedData = data, let translate = try? jsonDecoder.decode(Answer.self, from: catchedData)
+            if let catchedData = data, let answer = try? jsonDecoder.decode(Answer.self, from: catchedData)
                 {
-                    print(translate)
+                    DispatchQueue.main.async {
+                        completion?(answer, urlResponse ,nil)
+                    }
                 }
             if let urlResponse = urlResponse {
-                print(urlResponse)
+                //print(urlResponse)
             }
             if let error = error {
-                print(error)
+                //print(error)
             }
         }
         task.resume()
