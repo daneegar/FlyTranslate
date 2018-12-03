@@ -11,7 +11,7 @@ import Foundation
 
 class Presenter: PresenterProtocol {
     func showGreeting() {
-        <#code#>
+        
     }
     
     

@@ -13,6 +13,8 @@ class View: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let ApiEntity = translateWithYandex()
+        ApiEntity.translate(it: nil, inDirection: nil)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
