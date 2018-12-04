@@ -33,10 +33,10 @@ class translateWithYandex {
         self.stringURL = "https://translate.yandex.net/api/v1.5/tr.json/translate"
         self.url = URL(string: self.stringURL)!
     }
-    func translate (it text: String?, inDirection fromEnToRu: Bool?, completion: ((Answer?, URLResponse?, Error?) -> Void)?){
+    func translate (it text: String, inDirection fromEnToRu: Bool?, completion: ((Answer?, URLResponse?, Error?) -> Void)?){
         var resultURL = self.url.append("key", value: APIKey.instance.key)
         resultURL = resultURL.append("lang", value: "en-ru")
-        resultURL = resultURL.append("text", value: "Hello World!")
+        resultURL = resultURL.append("text", value: text)
         let task = URLSession.shared.dataTask(with: resultURL) { (data, urlResponse, error) in
             let jsonDecoder = JSONDecoder()
             if let catchedData = data, let answer = try? jsonDecoder.decode(Answer.self, from: catchedData)

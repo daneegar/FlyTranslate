@@ -6,11 +6,14 @@
 //  Copyright © 2018 Denis Garifyanov. All rights reserved.
 //
 
+import UIKit
+
 protocol ViewProtocol: class {
-    func pickTranslated (message: MessageAsSomeTranslate)
+    func showTranslatedMessage (message: IndexPath)
 }
 
 
 protocol PresenterProtocol {
-    
+    func countMessages() -> Int
+    func askForShowTranslatedMessageToView (message: MessageAsSomeTranslate) -> IndexPath
 }
