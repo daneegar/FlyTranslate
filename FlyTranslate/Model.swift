@@ -9,7 +9,7 @@
 import Foundation
 
 class MessageAsSomeTranslate {
-    let isFromEngToRus: Bool
+    var isFromEngToRus: Bool
     let text: String
     var translatedText: String?
     init (text: String, isFromEngToRus: Bool) {
@@ -17,7 +17,9 @@ class MessageAsSomeTranslate {
         self.text = text
         self.translatedText = ""
     }
-    func compliteTheMessage(withAnswer answer: Answer) {
+    func compliteTheMessage(withAnswer answer: AnswerWithTranslate) {
         self.translatedText = answer.text[0]
+        if answer.lang == "en-ru" { self.isFromEngToRus = true }
+        else if answer.lang == "ru-en" { self.isFromEngToRus = false}
     }
 }

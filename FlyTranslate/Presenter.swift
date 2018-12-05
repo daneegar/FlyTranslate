@@ -29,7 +29,7 @@ class Presenter: PresenterProtocol {
     func translate(someText text: String, isFromEngToRus isEng: Bool) {
         let makeTheMessage = MessageAsSomeTranslate(text: text, isFromEngToRus: isEng)
         let api = translateWithYandex()
-        api.translate(it: text, inDirection: isEng) { (answer, urlResponse, error) in
+        api.translateWithDetectingLanguage(it: text, inDirection: isEng) { (answer, urlResponse, error) in
             guard let answer = answer else {return}
             makeTheMessage.compliteTheMessage(withAnswer: answer)
             self.collectionOfMessages.insert(makeTheMessage, at: 0)

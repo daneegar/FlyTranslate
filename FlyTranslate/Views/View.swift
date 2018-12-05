@@ -21,6 +21,16 @@ class View: UIViewController, ViewProtocol {
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet var mainView: UIView!
     @IBOutlet weak var micButton: UIButton!
+    @IBOutlet weak var iconsSubView: UIView!
+    @IBOutlet weak var englishIcon: UIImageView!
+    @IBOutlet weak var russianIcon: UIImageView!
+    @IBOutlet weak var englishIconLeftConstraint: NSLayoutConstraint!
+    @IBOutlet weak var englishIconRightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var russianIconLeftConstraint: NSLayoutConstraint!
+    @IBOutlet weak var russianIconRighConstraint: NSLayoutConstraint!
+    
+    var frontIconLeftConstraint: CGFloat?
+    var frontIconRightConstraint: CGFloat?
     
     let audioEngine = AVAudioEngine()
     let speechEnRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
@@ -79,17 +89,32 @@ class View: UIViewController, ViewProtocol {
         self.textField.text = self.isEnToRuModeOn ? "Английский" : "Русский"
         self.textField.backgroundColor = currentColour()
         self.bottomView.backgroundColor = currentColour()
+        self.bottomView.layer.cornerRadius = CGFloat(integerLiteral: 20)
+        self.iconsSubView.layer.cornerRadius = CGFloat(integerLiteral: 18)
+        self.englishIcon.layer.cornerRadius = CGFloat(integerLiteral: 16)
+        self.russianIcon.layer.cornerRadius = CGFloat(integerLiteral: 16)
+        self.englishIcon.layer.borderWidth = CGFloat(integerLiteral: 2)
+        self.russianIcon.layer.borderWidth = CGFloat(integerLiteral: 2)
+        self.englishIcon.layer.borderColor = UIColor.white.cgColor
+        self.russianIcon.layer.borderColor = UIColor.white.cgColor
+        
+        self.frontIconRightConstraint = englishIconRightConstraint.constant
+        self.frontIconLeftConstraint = englishIconLeftConstraint.constant
+        updateIconsPositions()
         updateButtons()
     }
     func updateView () {
+        
         if !self.textField.isEditing {
             self.textField.text = self.isEnToRuModeOn ? "Английский" : "Русский"
         }
         UIView.animate(withDuration: 0.5) {
             self.textField.backgroundColor = self.currentColour()
             self.bottomView.backgroundColor = self.currentColour()
+            
         }
         self.textField.isEnabled = audioEngine.isRunning ? false : true
+        updateIconsPositions()
     }
     func updateButtons () {
         self.sendTextButton.isHidden = keyboardIsShown ? false : true
@@ -97,7 +122,18 @@ class View: UIViewController, ViewProtocol {
         self.micButton.isHidden = keyboardIsShown ? true : false
         self.micButton.isEnabled = keyboardIsShown ? false : true
     }
-    
+    func updateIconsPositions() {
+        let viewWhichShoudBeInFront = self.isEnToRuModeOn ? self.englishIcon : self.russianIcon
+        self.englishIconLeftConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconLeftConstraint : self.frontIconRightConstraint)!
+        self.englishIconRightConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconRightConstraint : self.frontIconLeftConstraint)!
+        self.russianIconLeftConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconRightConstraint : self.frontIconLeftConstraint)!
+        self.russianIconRighConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconLeftConstraint : self.frontIconRightConstraint)!
+
+        UIView.animate(withDuration: 0.5) {
+            self.iconsSubView.bringSubviewToFront(viewWhichShoudBeInFront!)
+            self.iconsSubView.layoutIfNeeded()
+        }
+    }
     
     func changeDirection() {
         self.isEnToRuModeOn = !isEnToRuModeOn
@@ -122,6 +158,7 @@ class View: UIViewController, ViewProtocol {
             UIView.animate(withDuration: 0.3) {
                 self.mainView.layoutIfNeeded()
             }
+            updateView()
             
         }
     }
@@ -160,8 +197,6 @@ extension View: UITextFieldDelegate {
         self.changeDirection()
         updateView()
     }
-    
-
     
     func currentColour() -> UIColor {
         return isEnToRuModeOn ? UIColor.UIColorFromHex(rgbValue: 0x007CE9) : UIColor.UIColorFromHex(rgbValue: 0xED4C5C)
