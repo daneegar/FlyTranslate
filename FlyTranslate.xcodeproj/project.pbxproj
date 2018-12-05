@@ -18,6 +18,7 @@
 		9293FB2F21B57ADB005421EC /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293FB2E21B57ADB005421EC /* API.swift */; };
 		9293FB3221B58196005421EC /* ApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293FB3121B58196005421EC /* ApiKey.swift */; };
 		92E9F3DE21B657A1002C30F2 /* messageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9F3DD21B657A1002C30F2 /* messageCell.swift */; };
+		92E9F3E121B6C814002C30F2 /* UIColourExtensionGorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9F3E021B6C814002C30F2 /* UIColourExtensionGorHex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		9293FB2E21B57ADB005421EC /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		9293FB3121B58196005421EC /* ApiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKey.swift; sourceTree = "<group>"; };
 		92E9F3DD21B657A1002C30F2 /* messageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = messageCell.swift; sourceTree = "<group>"; };
+		92E9F3E021B6C814002C30F2 /* UIColourExtensionGorHex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColourExtensionGorHex.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				9293FB1521B03E47005421EC /* AppDelegate.swift */,
 				9293FB2E21B57ADB005421EC /* API.swift */,
 				9293FB3121B58196005421EC /* ApiKey.swift */,
+				92E9F3E021B6C814002C30F2 /* UIColourExtensionGorHex.swift */,
 			);
 			path = service;
 			sourceTree = "<group>";
@@ -177,6 +180,7 @@
 				9293FB1821B03E47005421EC /* View.swift in Sources */,
 				9293FB2A21B03EBC005421EC /* Presenter.swift in Sources */,
 				9293FB3221B58196005421EC /* ApiKey.swift in Sources */,
+				92E9F3E121B6C814002C30F2 /* UIColourExtensionGorHex.swift in Sources */,
 				9293FB2F21B57ADB005421EC /* API.swift in Sources */,
 				9293FB1621B03E47005421EC /* AppDelegate.swift in Sources */,
 			);
