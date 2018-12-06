@@ -83,11 +83,11 @@ class translateWithYandex {
                         completion?(answer, urlResponse ,nil)
                     }
                 }
-            if let urlResponse = urlResponse {
-                //print(urlResponse)
-            }
+//            if let urlResponse = urlResponse {
+//                //print(urlResponse)
+//            }
             if let error = error {
-                //print(error)
+                print(error)
             }
         }
         task.resume()
@@ -99,8 +99,8 @@ class translateWithYandex {
         resultURL = resultURL.append("text", value: text)
         resultURL = resultURL.append("lang", value: hint)
         let task = URLSession.shared.dataTask(with: resultURL) { (data, urlResponse, error) in
-            let string = String(data: data!, encoding: .utf8)
-            print(string)
+//            let string = String(data: data!, encoding: .utf8)
+//            print(string)
             let jsonDecoder = JSONDecoder()
             if let catchedData = data, let answer = try? jsonDecoder.decode(AnswerWithDetectedLanguage.self, from: catchedData)
             {
@@ -108,11 +108,11 @@ class translateWithYandex {
                     completion?(answer, urlResponse ,nil)
                 }
             }
-            if let urlResponse = urlResponse {
-                //print(urlResponse)
-            }
+//            if let urlResponse = urlResponse {
+//                //print(urlResponse)
+//            }
             if let error = error {
-                //print(error)
+                print(error)
             }
         }
         task.resume()

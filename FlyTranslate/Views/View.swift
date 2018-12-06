@@ -9,15 +9,25 @@
 import UIKit
 import Speech
 
+enum placeHolderStates: String {
+    case en = "Английский"
+    case ru = "Русский"
+    case write = "Пишите..."
+    case talk = "Говорите..."
+    case none = ""
+}
+
 class View: UIViewController, ViewProtocol {
     let presenter = Presenter.instance.self
     var isEnToRuModeOn = true
     var keyboardIsShown = false
-    var recognitionIsBegining = false
     var recordedSpeech = ""
     @IBOutlet weak var sendTextButton: UIButton!
     @IBOutlet weak var chatTableView: UITableView!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var textField: UITextView! // textView if be honest
+    @IBOutlet weak var textViewHeight: NSLayoutConstraint!
+
+    
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet var mainView: UIView!
     @IBOutlet weak var micButton: UIButton!
@@ -28,6 +38,7 @@ class View: UIViewController, ViewProtocol {
     @IBOutlet weak var englishIconRightConstraint: NSLayoutConstraint!
     @IBOutlet weak var russianIconLeftConstraint: NSLayoutConstraint!
     @IBOutlet weak var russianIconRighConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     var frontIconLeftConstraint: CGFloat?
     var frontIconRightConstraint: CGFloat?
@@ -38,25 +49,10 @@ class View: UIViewController, ViewProtocol {
     var request = SFSpeechAudioBufferRecognitionRequest()
     var recognitionTask: SFSpeechRecognitionTask?
     
-    @IBAction func micButtonTapped(_ sender: Any) {
-        if  audioEngine.isRunning {
-            stopRecordAndRecognizeSpeechAndSendText()
-            updateView()
-            self.micButton.backgroundColor = .none
-            return
-        }
-        self.recordAndRecognizeSpeech()
-        self.micButton.backgroundColor = .black
-        updateView()
-    }
+
     
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    func setGreeting(greeting: String) {
-        
-    }
-    
-    
-    
+
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,14 +66,8 @@ class View: UIViewController, ViewProtocol {
         preparing()
         self.presenter.translate(someText: "Hello World", isFromEngToRus: self.isEnToRuModeOn)
     }
-
-    func pickTranslated(message: MessageAsSomeTranslate) {
-        print(message.translatedText!)
-    }
     
-    func showTranslatedMessage(message: IndexPath) {
-        self.chatTableView.insertRows(at: [message], with: .automatic)
-    }
+
     
     //MARK: - preparing and update view
     func preparing() {
@@ -85,8 +75,8 @@ class View: UIViewController, ViewProtocol {
         self.chatTableView.separatorStyle = .none
         self.chatTableView.allowsSelection = false
         self.chatTableView.keyboardDismissMode = .onDrag
-        self.textField.borderStyle = .none
-        self.textField.text = self.isEnToRuModeOn ? "Английский" : "Русский"
+        
+        self.textField.text = self.isEnToRuModeOn ? placeHolderStates.en.rawValue : placeHolderStates.ru.rawValue
         self.textField.backgroundColor = currentColour()
         self.bottomView.backgroundColor = currentColour()
         self.bottomView.layer.cornerRadius = CGFloat(integerLiteral: 20)
@@ -97,30 +87,66 @@ class View: UIViewController, ViewProtocol {
         self.russianIcon.layer.borderWidth = CGFloat(integerLiteral: 2)
         self.englishIcon.layer.borderColor = UIColor.white.cgColor
         self.russianIcon.layer.borderColor = UIColor.white.cgColor
-        
+
         self.frontIconRightConstraint = englishIconRightConstraint.constant
         self.frontIconLeftConstraint = englishIconLeftConstraint.constant
+        
+        self.textField.isScrollEnabled = false
+        self.textField.textContainer.heightTracksTextView = true
+        self.textField.endFloatingCursor()
+
+        self.textField.textColor = UIColor.lightGray
+        self.textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
+        
         updateIconsPositions()
-        updateButtons()
+        updateButtons(showMic: true)
+    }
+    
+    
+    func resetTextField() {
+        self.textField.textColor = UIColor.lightGray
+        self.textField.text = placeHolderStates.write.rawValue
+        self.textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
+        self.textViewHeight.constant = CGFloat(integerLiteral: 36)
+        UIView.animate(withDuration: 0.5) {
+            self.bottomView.layoutIfNeeded()
+        }
     }
     func updateView () {
-        
-        if !self.textField.isEditing {
-            self.textField.text = self.isEnToRuModeOn ? "Английский" : "Русский"
-        }
+        resetTextField()
+        self.textField.text = self.isEnToRuModeOn ? placeHolderStates.en.rawValue : placeHolderStates.ru.rawValue
+        if audioEngine.isRunning { placeHolderHandler(state: .talk)}
         UIView.animate(withDuration: 0.5) {
             self.textField.backgroundColor = self.currentColour()
             self.bottomView.backgroundColor = self.currentColour()
-            
+            self.textViewHeight.constant = CGFloat(integerLiteral: 36)
         }
-        self.textField.isEnabled = audioEngine.isRunning ? false : true
+        self.textField.isEditable = audioEngine.isRunning ? false : true
         updateIconsPositions()
     }
-    func updateButtons () {
-        self.sendTextButton.isHidden = keyboardIsShown ? false : true
-        self.sendTextButton.isEnabled = keyboardIsShown ? true : false
-        self.micButton.isHidden = keyboardIsShown ? true : false
-        self.micButton.isEnabled = keyboardIsShown ? false : true
+    func updateButtons (showMic: Bool) {
+        if showMic {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
+                self.sendTextButton.imageView?.alpha = 0
+                self.micButton.imageView?.alpha = 100
+            }, completion: { _ in
+                self.sendTextButton.isHidden = true
+                self.sendTextButton.isEnabled = false
+                self.micButton.isHidden = false
+                self.micButton.isEnabled = true
+            })
+        } else {
+            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
+                self.micButton.imageView?.alpha = 0
+                self.sendTextButton.imageView?.alpha = 100
+            }, completion: { _ in
+                self.sendTextButton.isHidden = false
+                self.sendTextButton.isEnabled = true
+                self.micButton.isHidden = true
+                self.micButton.isEnabled = false
+            })
+        }
+        
     }
     func updateIconsPositions() {
         let viewWhichShoudBeInFront = self.isEnToRuModeOn ? self.englishIcon : self.russianIcon
@@ -128,10 +154,19 @@ class View: UIViewController, ViewProtocol {
         self.englishIconRightConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconRightConstraint : self.frontIconLeftConstraint)!
         self.russianIconLeftConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconRightConstraint : self.frontIconLeftConstraint)!
         self.russianIconRighConstraint.constant = (!self.isEnToRuModeOn ? self.frontIconLeftConstraint : self.frontIconRightConstraint)!
-
         UIView.animate(withDuration: 0.5) {
             self.iconsSubView.bringSubviewToFront(viewWhichShoudBeInFront!)
             self.iconsSubView.layoutIfNeeded()
+        }
+    }
+    func placeHolderHandler (state: placeHolderStates) {
+        let placeHolderColor = UIColor.lightGray
+        switch state {
+        case .talk:
+            self.textField.textColor = placeHolderColor
+            self.textField.text = state.rawValue
+        default:
+            return
         }
     }
     
@@ -139,10 +174,11 @@ class View: UIViewController, ViewProtocol {
         self.isEnToRuModeOn = !isEnToRuModeOn
     }
     
+    //MARK: - keyboard notifications
     @objc func keyboardWillShow(notification: NSNotification) {
         if keyboardIsShown {return} else {keyboardIsShown = !keyboardIsShown}
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            updateButtons()
+            //updateButtons()
             self.bottomConstraint.constant -= keyboardSize.height
             UIView.animate(withDuration: 0.3) {
                 self.mainView.layoutIfNeeded()
@@ -154,7 +190,7 @@ class View: UIViewController, ViewProtocol {
         if !keyboardIsShown {return} else {keyboardIsShown = !keyboardIsShown}
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             self.bottomConstraint.constant += keyboardSize.height
-            updateButtons()
+            //updateButtons()
             UIView.animate(withDuration: 0.3) {
                 self.mainView.layoutIfNeeded()
             }
@@ -164,7 +200,7 @@ class View: UIViewController, ViewProtocol {
     }
 }
 
-//MARK: - data source methods
+//MARK: - data source methods and append a message
 extension View: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.countMessages()
@@ -173,16 +209,55 @@ extension View: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return presenter.cellPerfomer(by: indexPath, inTableView: tableView)
     }
+    func showTranslatedMessage(message: IndexPath) {
+        self.chatTableView.insertRows(at: [message], with: .automatic)
+    }
 }
 
 
 
 
-//MARK: - textField delegate methods and buttons
-extension View: UITextFieldDelegate {
+//MARK: - textView delegate methods and menu's buttons
+extension View: UITextViewDelegate {
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.text = placeHolderStates.write.rawValue
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText: String = textView.text
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        if updatedText.isEmpty {
+            updateButtons(showMic: true)
+            textView.text = placeHolderStates.write.rawValue
+            textView.textColor = UIColor.lightGray
+            
+            textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+        }
+        else if textView.textColor == UIColor.lightGray && !text.isEmpty {
+            updateButtons(showMic: false)
+            textView.textColor = UIColor.white
+            textView.text = text
+        }
+        else {
+            return true
+        }
+        return false
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let size = CGSize(width: textView.frame.width, height: .infinity)
+        let estimatedSize = textView.sizeThatFits(size)
+        self.textViewHeight.constant = estimatedSize.height
+        UIView.animate(withDuration: 0.3) {
+            self.bottomView.layoutIfNeeded()
+            self.chatTableView.layoutIfNeeded()
+        }
     }
     
     @IBAction func sendText(_ sender: Any) {
@@ -190,9 +265,12 @@ extension View: UITextFieldDelegate {
             //TODO: - do some exclusion
             return
         }
-        self.presenter.translate(someText: textIsHere.localizedCapitalized, isFromEngToRus: isEnToRuModeOn)
-        self.textField.text = ""
+        self.presenter.translate(someText: textIsHere, isFromEngToRus: isEnToRuModeOn)
+        resetTextField()
+        updateButtons(showMic: true)
     }
+    
+    
     @IBAction func changeModeTapped(_ sender: Any) {
         self.changeDirection()
         updateView()
@@ -205,6 +283,19 @@ extension View: UITextFieldDelegate {
 
 //MARK: - speech recognizer
 extension View: SFSpeechRecognizerDelegate {
+    
+    @IBAction func micButtonTapped(_ sender: Any) {
+        if  audioEngine.isRunning {
+            stopRecordAndRecognizeSpeechAndSendText()
+            updateView()
+            self.micButton.backgroundColor = .none
+            return
+        }
+        self.recordAndRecognizeSpeech()
+        self.micButton.backgroundColor = .black
+        updateView()
+    }
+    
     func recordAndRecognizeSpeech() {
         let node = self.audioEngine.inputNode
         let recordingFormat = node.outputFormat(forBus: 0)

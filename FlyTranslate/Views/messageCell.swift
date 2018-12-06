@@ -36,9 +36,11 @@ class messageCell: UITableViewCell {
         bodyOfContent.backgroundColor = colour
         bodyOfContent.layer.cornerRadius = CGFloat(integerLiteral: 10)
         if message.isFromEngToRus {
-         self.rightConstraint.constant = 139
+            self.rightConstraint.constant = 139
+            self.leftConstraint.constant = 10
         } else {
             self.leftConstraint.constant = 139
+            self.rightConstraint.constant = 10
             self.translatedText?.textAlignment = .right
             self.textForTranslate? .textAlignment = .right
         }

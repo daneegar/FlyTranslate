@@ -46,10 +46,9 @@ class Presenter: PresenterProtocol {
         return self.collectionOfMessages.count
     }
     
-    func askForShowTranslatedMessageToView(message: MessageAsSomeTranslate) -> IndexPath {
+    func askForShowTranslatedMessageToView(message: MessageAsSomeTranslate){
         let indexPath = IndexPath(row: 0, section: 0)
         view?.showTranslatedMessage(message: indexPath)
-        return indexPath
     }
     
     func cellPerfomer(by indexPath: IndexPath, inTableView tableView: UITableView) -> UITableViewCell {

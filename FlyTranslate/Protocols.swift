@@ -15,5 +15,5 @@ protocol ViewProtocol: class {
 
 protocol PresenterProtocol {
     func countMessages() -> Int
-    func askForShowTranslatedMessageToView (message: MessageAsSomeTranslate) -> IndexPath
+    func askForShowTranslatedMessageToView (message: MessageAsSomeTranslate)
 }
