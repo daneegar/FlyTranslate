@@ -53,6 +53,7 @@
 		9293FB0921B03E47005421EC = {
 			isa = PBXGroup;
 			children = (
+				9293FB2B21B040EB005421EC /* README.md */,
 				9293FB1421B03E47005421EC /* FlyTranslate */,
 				9293FB1321B03E47005421EC /* Products */,
 			);
@@ -75,7 +76,6 @@
 				9293FB2C21B16AD8005421EC /* Protocols.swift */,
 				9293FB3021B57AED005421EC /* service */,
 				9293FB1921B03E47005421EC /* Main.storyboard */,
-				9293FB2B21B040EB005421EC /* README.md */,
 				9293FB1C21B03E4B005421EC /* Assets.xcassets */,
 				9293FB1E21B03E4B005421EC /* LaunchScreen.storyboard */,
 				9293FB2121B03E4B005421EC /* Info.plist */,
